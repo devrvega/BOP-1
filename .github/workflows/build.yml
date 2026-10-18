@@ -28,7 +28,7 @@ jobs:
           path: |
             build/host/*.log
             build/scenarios/
-      - name: The firmware (a development build, identity FM-1_200)
+      - name: The firmware (a development build, identity FM-1_610)
         uses: actions/upload-artifact@v7
         with:
           name: bop1-dev-${{ github.sha }}
