@@ -1,0 +1,196 @@
+# The manual's screenshots (tools/manual_shots.sh): every door, the friends, the places, the cards
+wait 2500
+tapkey w4
+wait 120
+shot screen-play.png
+# the eight friends, each a moment after a note
+turn ALGO 1
+tapkey w6
+wait 250
+shot friend-1.png
+turn ALGO 1
+tapkey w6
+wait 250
+shot friend-2.png
+turn ALGO 1
+tapkey w6
+wait 250
+shot friend-3.png
+turn ALGO 1
+tapkey w6
+wait 250
+shot friend-4.png
+turn ALGO 1
+tapkey w6
+wait 250
+shot friend-5.png
+turn ALGO 1
+tapkey w6
+wait 250
+shot friend-6.png
+turn ALGO 1
+tapkey w6
+wait 250
+shot friend-7.png
+turn ALGO 1
+wait 400
+shot friend-0.png
+# the shapes: K1 from sine to noise
+spin K1 25
+wait 200
+shot shape-tri.png
+spin K1 25
+wait 200
+shot shape-saw.png
+spin K1 25
+wait 200
+shot shape-square.png
+spin K1 25
+wait 200
+shot shape-noise.png
+spin K1 -100
+# bright: the mouth
+spin K2 -60
+tapkey w6
+wait 200
+shot mouth-closed.png
+spin K2 60
+tapkey w6
+wait 200
+shot mouth-open.png
+# the places: K4
+spin K4 -20
+spin K4 18
+wait 300
+shot place-cave.png
+spin K4 12
+wait 300
+shot place-canyon.png
+spin K4 15
+tapkey w6
+wait 300
+shot place-space.png
+spin K4 -50
+# the styles
+turn PRESET 7
+wait 600
+shot style-disco.png
+turn PRESET -4
+wait 600
+shot style-lullaby.png
+turn PRESET -3
+wait 300
+press FX
+wait 1100
+shot card-fx.png
+release FX
+wait 100
+# the doors
+tap HOME
+wait 200
+shot screen-doors.png
+tapkey w1
+tapkey w1
+wait 400
+shot screen-make-tune.png
+turn ALGO -2
+tapkey b0
+wait 400
+shot screen-make-beats.png
+turn ALGO 1
+tap SEQ
+wait 300
+shot screen-make-steps.png
+press ARP
+wait 600
+shot screen-make-parts.png
+release ARP
+press GLO
+wait 600
+shot screen-make-chords.png
+release GLO
+wait 100
+tap SEQ
+tap HOME
+tapkey w2
+tapkey w2
+wait 300
+shot screen-lab-menu.png
+tapkey w0
+spin K1 50
+key 12 down
+wait 400
+shot screen-lab-osc.png
+tap SEQ
+spin K1 -25
+spin K2 30
+wait 400
+shot screen-lab-filter.png
+key 12 up
+tap ENV
+wait 300
+shot screen-lab-env.png
+tap LFO
+spin K3 40
+key 14 down
+wait 300
+shot screen-lab-lfo.png
+key 14 up
+tap SAVE
+wait 200
+shot screen-lab-myfriends.png
+tap SAVE
+tap HOME
+tapkey w2
+wait 100
+tapkey w1
+wait 200
+shot screen-lessons.png
+tapkey w3
+tap OCT+
+tap OCT+
+wait 300
+shot screen-lesson.png
+tap HOME
+tapkey w3
+tapkey w3
+wait 400
+shot screen-games.png
+tapkey w0
+tapkey w0
+wait 400
+shot screen-game-follow.png
+tap HOME
+tapkey w3
+tapkey w3
+wait 200
+tapkey w4
+tapkey w4
+wait 800
+spin K1 20
+wait 200
+shot screen-game-match.png
+tap HOME
+tapkey w3
+tapkey w3
+wait 200
+tapkey w6
+tapkey w6
+wait 200
+shot screen-book.png
+tap HOME
+tapkey w0
+tapkey w0
+wait 200
+press GLO
+press SAVE
+wait 3100
+release SAVE
+release GLO
+wait 100
+shot screen-grownups.png
+tap HOME
+wait 100
+tap SAVE
+wait 200
+shot screen-keep.png

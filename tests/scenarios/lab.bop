@@ -1,0 +1,72 @@
+# Lab: its first screen, the pages, the scope, My Friends, a lesson done
+wait 500
+tap HOME
+tapkey w2
+tapkey w2
+wait 200
+expect door 2
+expect safe 0
+shot menu.png
+tapkey w0
+wait 100
+turn K1 20
+key 12 down
+wait 400
+shot osc.png
+key 12 up
+tap SEQ
+turn K1 -30
+key 12 down
+wait 400
+shot filter.png
+key 12 up
+tap ENV
+turn K1 15
+wait 200
+shot env.png
+tap LFO
+turn K3 20
+key 12 down
+wait 300
+shot lfo.png
+key 12 up
+tap SAVE
+wait 100
+turn K1 3
+shot myfriends.png
+tapkey w0
+wait 500
+expect friend 8
+# a lesson
+tap HOME
+tapkey w2
+wait 100
+tapkey w1
+wait 100
+shot lessons.png
+tapkey w3
+wait 100
+tap OCT+
+tap OCT+
+shot lesson_try.png
+tap SEQ
+turn K1 -40
+wait 200
+shot lesson_done.png
+tap OCT+
+tap OCT+
+wait 100
+expect door 2
+# piano: the keys as they are
+tap GLO
+key 7 down
+wait 200
+key 7 up
+wait 2000
+# the friend made here plays in Play
+tap HOME
+tapkey w0
+tapkey w0
+wait 200
+expect door 0
+expect friend 8

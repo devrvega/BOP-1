@@ -1,0 +1,135 @@
+# Play: the music at power-on, keys and pads, the knobs, the friends, the style, Surprise, the tricks, Loop me,
+# undo, keep; the volume cap and the flash rule throughout
+wait 100
+expect playing 1
+expect door 0
+expect home 0
+state
+wait 1400
+shot power_on.png
+tapkey w4
+tapkey b0
+tapkey b6
+wait 400
+shot keys.png
+expect pk0 0
+turn K1 20
+expect pk0 >30
+turn K2 -20
+wait 300
+shot shape_saw.png
+turn K4 30
+expect pk23 >70
+wait 600
+shot echo.png
+turn ALGO 3
+expect friend 3
+wait 800
+shot friend3.png
+# the style: Disco, then back
+turn PRESET -1
+expect style 7
+wait 1000
+shot disco.png
+turn PRESET 1
+expect style 0
+# tempo: the turtle and the rabbit
+turn SELECT 5
+expect tempo >124
+wait 200
+shot tempo.png
+# Surprise: a new song, my friend kept
+tap FX
+wait 200
+expect friend 3
+expect style 0
+shot surprise.png
+wait 800
+# a trick, while held
+press FX
+key w0 down
+wait 300
+expect trick 1
+key w0 up
+release FX
+wait 100
+expect trick 0
+# OCT, ENV, the drums and the sparkle and the wobble on and off
+tap OCT+
+expect oct 1
+tap OCT-
+tap OCT-
+expect oct -1
+tap OCT+
+tap SEQ
+expect mute0 1
+tap SEQ
+expect mute0 0
+tap ARP
+expect mute3 1
+tap ARP
+# Loop me: two notes in, round they go
+tap REC
+wait 100
+expect rec 1
+tapkey w6
+wait 250
+tapkey w8
+wait 250
+tapkey b2
+tap REC
+wait 100
+expect rec 0
+expect loop_on 1
+expect recorded >1
+wait 3000
+shot loop.png
+# oops: the loop goes, then comes back
+tap EDIT
+wait 100
+expect loop_on 0
+tap EDIT
+wait 100
+expect loop_on 1
+# EDIT held: my loop cleared
+press EDIT
+wait 2200
+release EDIT
+wait 100
+expect loop_on 0
+# hold a button: its card
+press ENV
+wait 1100
+expect help 3
+shot card.png
+release ENV
+wait 100
+expect help 0
+# keep it
+tap SAVE
+expect picker 1
+tapkey w5
+wait 200
+expect picker 0
+expect used 32
+expect slot 5
+# the music off and on
+tap PLAY
+wait 100
+expect playing 0
+tap PLAY
+wait 100
+expect playing 1
+# the volume cap (70%): MASTER all the way, the peak stays under -3.1 dBFS
+master 4096
+peakreset
+turn K4 40
+tapkey b0
+tapkey b0
+tapkey w15
+wait 3000
+expect peak_db_max -3.0
+expect peak_db_min -30
+# the flash rule: never more than three flashes a second, on the screen or the lights
+expect flashes <4
+expect ledflashes <4

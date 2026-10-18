@@ -1,0 +1,26 @@
+# The grown-ups' page: the combo, Play only, the volume cap, calm lights, a reset held, HOME keeps it
+wait 400
+press GLO
+press SAVE
+wait 3100
+release SAVE
+release GLO
+wait 100
+expect gu 1
+shot page.png
+turn K1 -3
+expect home 0
+turn SELECT 1
+turn K1 -4
+turn SELECT 1
+turn K1 1
+turn SELECT 10
+wait 50
+shot page2.png
+tap HOME
+wait 100
+expect gu 0
+expect door 0
+tap HOME
+wait 100
+expect home 0

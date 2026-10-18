@@ -1,0 +1,107 @@
+# Games: the menu, Follow the lights to the end (Twinkle; then quiet: no note left on), Copy me, High or low,
+# Sound match, Name the friend, the sticker book; the song's sounds back after
+wait 400
+tap HOME
+tapkey w3
+tapkey w3
+wait 200
+expect door 3
+wait 300
+expect playing 0
+shot menu.png
+tapkey w0
+tapkey w0
+wait 300
+shot follow.png
+# Twinkle: C C G G A A G F F E E D D C on the white keys (F3 = w0: C4 = w4)
+tapkey w4
+tapkey w4
+tapkey w8
+tapkey w8
+tapkey w9
+tapkey w9
+tapkey w8
+tapkey w7
+tapkey w7
+tapkey w6
+tapkey w6
+tapkey w5
+tapkey w5
+tapkey w4
+wait 300
+shot follow_done.png
+# the tune's last note ends the game: let go, it must stop (the ta-da too, in time)
+wait 3500
+peakreset
+wait 500
+expect peak_db_max -60
+tapkey w0
+wait 200
+# Copy me: hear two, get one wrong on purpose: a star anyway
+tapkey w1
+tapkey w1
+wait 2000
+shot copy.png
+tapkey w15
+wait 1200
+tapkey w0
+wait 200
+# High or low: eight answers
+tapkey w2
+tapkey w2
+wait 1800
+shot highlow.png
+tap OCT+
+wait 1600
+tap OCT-
+wait 1600
+tap OCT+
+wait 1600
+tap OCT-
+wait 1600
+tap OCT+
+wait 1600
+tap OCT-
+wait 1600
+tap OCT+
+wait 1600
+tap OCT-
+wait 1200
+shot highlow_done.png
+tapkey w0
+wait 200
+# Sound match
+tapkey w4
+tapkey w4
+wait 800
+turn K1 10
+wait 300
+shot match.png
+tap HOME
+tapkey w3
+tapkey w3
+wait 200
+# Name the friend
+tapkey w5
+tapkey w5
+wait 800
+shot name.png
+tapkey w0
+wait 300
+tap HOME
+tapkey w3
+tapkey w3
+wait 100
+tapkey w6
+tapkey w6
+wait 200
+shot book.png
+# back to Play: the song's sounds as they were, the music on
+tap HOME
+tapkey w0
+tapkey w0
+wait 100
+expect friend 0
+tap PLAY
+wait 100
+expect playing 1

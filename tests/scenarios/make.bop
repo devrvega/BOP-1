@@ -1,0 +1,111 @@
+# Make: the doors, layers, steps, recording, parts and a song, chords, keeping and opening a song
+wait 600
+tap HOME
+wait 200
+expect home 1
+shot doors.png
+tapkey w1
+tapkey w1
+wait 300
+expect door 1
+expect home 0
+shot make_tune.png
+turn ALGO -2
+wait 300
+expect hit0 >0
+tapkey b1
+expect hit1 0
+tapkey w2
+tapkey w3
+wait 300
+expect hit1 0x000C
+shot make_beats.png
+turn ALGO 1
+tap SEQ
+tapkey w5
+tapkey w0
+tapkey w2
+wait 400
+expect note1.5 >0
+expect note1.0 0
+expect note1.2 0
+shot make_bass_steps.png
+# hold a step, K1: its note moves along the scale
+key w0 down
+turn K1 2
+key w0 up
+expect note1.0 >48
+press ARP
+wait 50
+tapkey w1
+tapkey w0
+tapkey w1
+wait 100
+shot parts.png
+release ARP
+wait 100
+expect part 1
+press GLO
+tapkey w1
+wait 100
+shot chords.png
+release GLO
+wait 1200
+press ENV
+wait 1200
+shot card.png
+release ENV
+wait 400
+tap SAVE
+wait 100
+shot keep.png
+tapkey w2
+wait 1700
+expect used 4
+# EDIT held: the bass cleared in this part (B now) (and oops brings it back)
+expect note1.4 >0
+press EDIT
+wait 2200
+release EDIT
+expect note1.4 0
+tap EDIT
+expect note1.4 >0
+# record the tune live, in time (the keys playing again, not steps)
+turn ALGO 1
+tap SEQ
+tap REC
+wait 200
+expect rec 1
+tapkey w9
+wait 300
+tapkey w11
+wait 200
+tap REC
+expect rec 0
+expect recorded >1
+# help me: a new bass
+turn ALGO -1
+tap FX
+wait 300
+expect note1.0 >0
+# keep it, power off and on: it is all still there
+reboot
+wait 300
+expect used 4
+expect playing 1
+# open a kept song: SAVE, turn to Open, a white key
+tap FX
+wait 200
+tap SAVE
+turn ALGO 1
+expect picker 2
+tapkey w2
+wait 200
+expect picker 0
+expect slot 2
+# Make keeps the work while it plays: twenty seconds after the last change
+turn K1 3
+expect dirty 1
+expect playing 1
+wait 70000
+expect dirty 0

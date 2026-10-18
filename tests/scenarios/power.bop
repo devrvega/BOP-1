@@ -1,0 +1,48 @@
+# Power: another firmware's settings ignored; quiet start; the sleep timer; idle dims; calm lights; Play only
+storeother
+reboot
+wait 300
+expect door 0
+expect playing 1
+expect style 0
+# the grown-ups: quiet at power-on, sleep after 5 minutes, calm lights
+press GLO
+press SAVE
+wait 3100
+release SAVE
+release GLO
+expect gu 1
+turn SELECT 2
+turn K1 1
+turn SELECT 2
+turn K1 1
+turn SELECT 2
+turn K1 -1
+tap HOME
+wait 100
+expect gu 0
+reboot
+wait 500
+expect playing 0
+tap PLAY
+wait 200
+expect playing 1
+# calm: no whole-panel LED flashes at all, however the kick goes
+wait 4000
+expect ledflashes <1
+# idle: dimmed after two minutes untouched
+wait 125000
+expect dimmed 1
+expect bright <3
+tapkey w3
+wait 100
+expect dimmed 0
+expect bright 4
+# the sleep timer: five minutes from power-on, half a minute untouched: the music stops, the screen dims
+wait 200000
+expect asleep 1
+expect playing 0
+expect bright 1
+tapkey w3
+wait 100
+expect asleep 0
