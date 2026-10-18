@@ -2,7 +2,7 @@
 
 Each release's notes come from its section here (`tools/release_notes.py`). The newest is first.
 
-## 0.1.0 — unreleased
+## 0.1.0 — 2026-10-18
 
 The first release: a music and synthesis toy for children, on the M-VAVE FM-1.
 

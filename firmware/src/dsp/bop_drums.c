@@ -159,9 +159,15 @@ static void metal_run(uint32_t n)
 
 static void pv_run(int p, uint32_t n, float *outl, float *outr)
 {
-    pv_t *v = &pv[p];
+    pv_t *v;
     uint32_t j;
-    float a = v->amp, gl = v->gl * v->g, gr = v->gr * v->g, bp, y;
+    float a, gl, gr, bp, y;
+    if ((unsigned)p >= EN_NPAD)                   /* (never: for GCC 13, which can't see it) */
+        return;
+    v = &pv[p];
+    a = v->amp;
+    gl = v->gl * v->g;
+    gr = v->gr * v->g;
     switch (p) {
     case PAD_KICK: {
         float inc = v->inc, ie = v->inc_end, pd = v->pd, ph = v->ph, nm = v->nmp;
@@ -424,12 +430,8 @@ static int pads_run(uint32_t n, float *outl, float *outr, float *livel, float *l
     if (pv[PAD_HAT].on)
         metal_run(n);
     for (p = 0; p < EN_NPAD; p++)
-        if (pv[p].on) {
-            if (pv[p].live)
-                pv_run(p, n, livel, liver);
-            else
-                pv_run(p, n, outl, outr);
-        }
+        if (pv[p].on)
+            pv_run(p, n, pv[p].live ? livel : outl, pv[p].live ? liver : outr);
     return any;
 }
 
