@@ -84,3 +84,5 @@ Blipblox were an inspiration, in ideas only: BOP-1's friends, music, sounds and 
 
 M-VAVE and FM-1 are trademarks of their owners. BOP-1 is independent: it is not affiliated with M-VAVE.
 Installing firmware is at your own risk; the installer can put the stock firmware back.
+
+You can also try BOP 1 in the browser, no flashing needed, in the free community [FM-1 Emulator](https://fm1-emulator.atst.tools/).
