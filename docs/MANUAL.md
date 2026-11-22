@@ -211,7 +211,7 @@ Make works on the song Play was playing (switch doors and it's the same song); S
 | SEQ | The white keys become the sixteen steps: a tap puts the last note played on that step, or takes it away; hold a step and turn knob 1 for its note (along the scale), knob 2 for its length |
 | REC | Records what you play into this layer of this part, in time; REC again to stop |
 | FX | **Help me:** a new idea for this layer |
-| SEL | This layer quiet, or back (its tab crossed out) |
+| SEL | This layer quiet, or back (its tab crossed out): the song stops playing it, but its keys still sound |
 | ENV · LFO · OCT | Short or long notes · the wobble · an octave down or up |
 | ARP held + white keys 1–4 | The part to work on (it plays round and round); press several in a row (A A B A...) and let go: a song, played as a chain |
 | GLO held + white keys 1–4 | The chords: happy (I–V–vi–IV), sad (vi–IV–I–V), brave (I–IV–V–I), sleepy (I–vi–IV–V) |
@@ -399,6 +399,10 @@ cancel.
 
 **Calibration:** if a button or knob does the wrong thing, hold OCT− and OCT+ while you switch the FM-1 on.
 The screen then asks you to press each button and turn each knob in turn.
+
+**A white key makes no sound:** on Make's Beats layer the white keys are the sixteen steps, not notes (the black keys
+play the drums). With SEQ on, a white key puts a step in or takes it away, and only putting one in plays its note.
+A layer whose tab is crossed out (SEL) is quiet in the song, but its keys still sound.
 
 **Clicks or dropouts:** the most BOP-1 can be asked for is every pad on every step with chords on every step
 and every effect up. If the FM-1 ever runs short, BOP-1 plays fewer notes at once (the tune first, then the

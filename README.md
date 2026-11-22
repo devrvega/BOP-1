@@ -10,6 +10,9 @@ whose body is the sound. The same toy grows with the child, from pressing things
 songs (6 to 8), to a subtractive synth with its real names (9 to 12 and up), so they leave knowing what an
 oscillator, a filter, an envelope and an LFO are.
 
+**Version 1.0** is the first release marked production ready. What changed in each release is in the
+[changelog](CHANGELOG.md).
+
 ![BOP-1 on the FM-1's screen: a friend singing, changing shape and place, then the Make and Lab doors](docs/img/bop1.gif)
 
 | | |
