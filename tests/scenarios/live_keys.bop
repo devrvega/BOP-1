@@ -1,0 +1,40 @@
+# Make: a layer muted with SEL still sounds when the child plays its white keys (the song's own notes stay out)
+wait 1500
+tap HOME
+wait 200
+tapkey w1
+tapkey w1
+wait 300
+expect door 1
+tap PLAY
+wait 3500
+expect playing 0
+# Tune, muted
+tap SEL
+wait 3000
+peakreset
+key w4 down
+wait 400
+key w4 up
+wait 100
+expect peak_db_min -40
+# Sparkle, muted
+turn ALGO 1
+tap SEL
+wait 3000
+peakreset
+key w4 down
+wait 400
+key w4 up
+wait 100
+expect peak_db_min -40
+# Bass, muted
+turn ALGO -2
+tap SEL
+wait 3000
+peakreset
+key w4 down
+wait 400
+key w4 up
+wait 100
+expect peak_db_min -40
