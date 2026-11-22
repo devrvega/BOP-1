@@ -2,8 +2,12 @@
 
 Each release's notes come from its section here (`tools/release_notes.py`). The newest is first.
 
-## Unreleased
+## 1.0.0 — 2026-11-22
 
+- **Production ready:** 1.0 is the first release of BOP-1 marked as ready for everyday use. It includes the fixes
+  below.
+- **Documentation:** the manual says that SEL's quiet layer still sounds under the keys, and Troubleshooting says why
+  a white key can be silent.
 - **Fixed:** the white keys were silent on a layer that was muted (Make's SEL mutes the layer you are on). The
   child's own keys, and the preview of a step, now sound whatever the layer's mute; the song's own notes stay out.
 - **Fixed:** a quick tap on a white key could be lost. A key let go sooner than 30 ms now sounds for 30 ms (the

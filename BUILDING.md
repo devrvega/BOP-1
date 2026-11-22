@@ -42,7 +42,7 @@ On Linux x86-64 the toolchain runs natively and Docker is not needed.
 
 `JIELI_TOOLCHAIN` and `AC79_SDK` override the default locations (`~/.jieli/toolchain`, `~/fw-AC79_AIoT_SDK`).
 
-`./build.sh --release 0.1` makes a release build; the package is `build/bop1-0.1.fwsc`, its identity
+`./build.sh --release 1.0` makes a release build; the package is `build/bop1-1.0.fwsc`, its identity
 `FM-1_61000100` (`FM-1_61` + major, minor, patch, two digits each; a development build is `FM-1_610`).
 
 `./build.sh --bench` makes a development build (`build/bop1-bench.fwsc`) that also plays test songs on request,
