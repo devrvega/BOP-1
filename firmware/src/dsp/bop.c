@@ -645,7 +645,7 @@ static void drain(void)
         case C_FADE: out_fade = 0.0f; break;
         case C_PREVIEW:
             if (a >= L_BASS && a <= L_SPARK) {
-                syn_on(a - 1, b, 0.8f, (int32_t)(0.4f * EN_SR));
+                syn_on_live(a - 1, b, 0.8f, (int32_t)(0.4f * EN_SR));
                 en_lay_on[a]++;
                 en_lay_note[a] = (uint8_t)b;
             }
@@ -724,9 +724,10 @@ static void render_chunk(int32_t *out, uint32_t n, float gain)
     prof(PR_DRUMS);
     for (l = 0; l < EN_NSYN; l++) {
         const en_layer_t *L = &en_song.lay[l + 1];
-        float pan = LAY_PAN[l], gl = (pan > 0.0f ? 1.0f - pan * 0.7f : 1.0f) * mg[l + 1],
-              gr = (pan < 0.0f ? 1.0f + pan * 0.7f : 1.0f) * mg[l + 1];
-        float ec = (float)L->p[PK_ECHO] * 0.009f * mg[l + 1], rv = (float)L->p[PK_REVERB] * 0.009f * mg[l + 1], pk = 0.0f;
+        float m = syn_live_on(l) ? 1.0f : mg[l + 1];     /* a child's key sounds on a muted layer too */
+        float pan = LAY_PAN[l], gl = (pan > 0.0f ? 1.0f - pan * 0.7f : 1.0f) * m,
+              gr = (pan < 0.0f ? 1.0f + pan * 0.7f : 1.0f) * m;
+        float ec = (float)L->p[PK_ECHO] * 0.009f * m, rv = (float)L->p[PK_REVERB] * 0.009f * m, pk = 0.0f;
         if (syn_run(l, n, lb, step_samples)) {
             for (j = 0; j < n; j++) {
                 float x = lb[j];

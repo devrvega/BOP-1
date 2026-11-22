@@ -3,7 +3,8 @@
  * different seeds different songs, the tune's strong beats on its chords, every note in the key's scale), the
  * scale lock (no key plays a note outside the scale), the safety (the output never above the volume cap, at
  * any MASTER, on the heaviest song; the resonance held back in the safe range), every friend and every pad
- * sounds and goes quiet (the black keys over the song, even with its drums off), no jumps or flattened tops
+ * sounds and goes quiet (the black keys over the song, even with its drums off; the white keys on a muted
+ * layer, and a tap shorter than an audio block), no jumps or flattened tops
  * in the sound, the tricks, Loop me and Make's recording (quantized, no double hits), the MIDI clock; no NaN.
  * With an argument (a directory) it also writes a WAV of every style and every friend, to listen to, and
  * times the render. */
@@ -605,6 +606,78 @@ static void t_smooth(void)
     CHECK(!flat, "the limiter flattens a loud chord's tops (%d samples)", flat);
 }
 
+/* the child's keys on the layers (Play's white keys are the tune's; Make plays the layer it is on) */
+static float live_peak(int layer, int note, float held_s)   /* press, hold, and the peak heard; then let go */
+{
+    float pk;
+    meter_reset();
+    en_note(layer, note, 1);
+    if (held_s > 0.0f)
+        run(held_s);
+    en_note(layer, note, 0);
+    run(0.4f);
+    pk = peak;
+    return pk;
+}
+static void t_live_keys(void)
+{
+    int layer, arp;
+    for (layer = L_BASS; layer <= L_SPARK; layer++) {
+        float pk;
+        /* a muted layer: the song's notes stay out, the child's keys are heard (Make's SEL mutes a layer) */
+        fresh_style(0, 1u);
+        en_song.lay[layer].mute = 1;
+        run(0.5f);
+        pk = live_peak(layer, 64, 0.3f);
+        CHECK(pk > 0.02f, "layer %d muted: its key is silent (%.4f)", layer, (double)pk);
+        run(3.0f);
+        meter_reset();
+        run(0.2f);
+        CHECK(peak < 0.002f, "layer %d muted: the key does not go quiet after (%.4f)", layer, (double)peak);
+        fresh_style(0, 1u);
+        for (arp = 0; arp < 4; arp++)
+            en_song.lay[arp].mute = 1;
+        en_play(1);
+        run(0.5f);
+        meter_reset();
+        run(6.0f);
+        CHECK(peak < 0.002f, "every layer muted: the song is still heard (%.4f)", (double)peak);
+        /* a tap shorter than an audio block (down and up before any sound is made) is still heard, and ends */
+        for (arp = 0; arp < 3; arp++) {            /* 0 plain, 1 the layer's own arpeggiator, 2 Play's (the tune's keys) */
+            fresh_style(0, 1u);
+            if (arp == 1)
+                en_song.lay[layer].p[PK_ARP] = 1;
+            if (arp == 2) {
+                if (layer != L_TUNE)
+                    continue;
+                en_arp_live = 1;
+            }
+            run(0.3f);
+            pk = live_peak(layer, 64, 0.0f);
+            CHECK(pk > 0.02f, "layer %d (%s): a tap shorter than a block is lost (%.4f)", layer,
+                  arp == 0 ? "plain" : arp == 1 ? "arp" : "play arp", (double)pk);
+            run(3.0f);
+            meter_reset();
+            run(0.2f);
+            CHECK(peak < 0.002f, "layer %d (%s): a quick tap does not go quiet (%.4f)", layer,
+                  arp == 0 ? "plain" : arp == 1 ? "arp" : "play arp", (double)peak);
+            en_arp_live = 0;
+        }
+        /* a held key is not cut at the minimum: it sustains until let go */
+        fresh_style(0, 1u);
+        en_song.lay[layer].p[PK_S] = 80;
+        en_song.lay[layer].p[PK_D] = 30;
+        run(0.3f);
+        en_note(layer, 64, 1);
+        run(0.5f);
+        meter_reset();
+        run(0.3f);
+        CHECK(peak > 0.02f, "layer %d: a held key stopped sounding (%.4f)", layer, (double)peak);
+        en_note(layer, 64, 0);
+        run(3.0f);
+    }
+}
+
 int main(int argc, char **argv)
 {
     const char *dir = argc > 1 ? argv[1] : 0;
@@ -615,6 +688,7 @@ int main(int argc, char **argv)
     t_safety();
     t_smooth();
     t_play(dir);
+    t_live_keys();
     t_record();
     t_clock();
     t_bench();

@@ -9,15 +9,18 @@
 #define NV_MAX 6
 static const uint8_t LAYER_NV[EN_NSYN] = {1, 6, 3};   /* BASS, TUNE, SPARKLE */
 #define SUB 32
+#define MIN_NOTE 1323                           /* a key held less than this (30 ms) sounds this long: no tap is lost */
 
 typedef struct {
     uint8_t on, gate, note, st;        /* st: 1 attack, 2 decay / sustain, 3 release */
+    uint8_t live;                      /* a child's key (or its preview), not the song's: heard on a muted layer too */
     float pitch, pitch_t;              /* semitones (glides to pitch_t) */
     float ph1, ph2, phs;
     float s[2];                        /* the filter */
     float env, vel;
     int32_t left;                      /* samples of gate left (-1: held until let go) */
     uint32_t age;
+    uint32_t t;                        /* samples it has sounded (a key let go sooner is held to MIN_NOTE) */
 } vo_t;
 
 typedef struct {
@@ -27,7 +30,7 @@ typedef struct {
     int crush_n;
     uint32_t ages;
     /* the arpeggiator: the keys held, where it is */
-    uint8_t held[8], held_n, arp_i, arp_dir, arp_note;
+    uint8_t held[8], held_n, arp_i, arp_dir, arp_note, arp_pend;   /* arp_pend: a key not yet heard (0: none) */
     float arp_t;
 } ly_t;
 static ly_t ly[EN_NSYN];
@@ -270,6 +273,7 @@ static void vo_run(int l, vo_t *v, float *out, uint32_t m, int scope)
             scope_pos += (int)n;
         }
         v->env = env;
+        v->t += n;
         if (v->left > 0) {
             v->left -= (int32_t)n;
             if (v->left <= 0) {
@@ -318,7 +322,7 @@ static vo_t *vo_alloc(int l)
 }
 
 /* a note on layer l (0 BASS, 1 TUNE, 2 SPARKLE), heard as note; gate in samples (-1 until syn_off) */
-static void syn_on(int l, int note, float vel, int32_t gate)
+static void syn_on_x(int l, int note, float vel, int32_t gate, int live)
 {
     ly_t *Y = &ly[l];
     vo_t *v;
@@ -348,6 +352,21 @@ static void syn_on(int l, int note, float vel, int32_t gate)
     v->vel = vel;
     v->left = gate;
     v->age = ++Y->ages;
+    v->live = (uint8_t)live;
+    v->t = 0;
+}
+static void syn_on(int l, int note, float vel, int32_t gate) { syn_on_x(l, note, vel, gate, 0); }
+static void syn_on_live(int l, int note, float vel, int32_t gate) { syn_on_x(l, note, vel, gate, 1); }
+
+/* a live voice sounds, whatever the layer's mute (the song's own notes are not written on a muted layer) */
+static int syn_live_on(int l)
+{
+    const ly_t *Y = &ly[l];
+    int i;
+    for (i = 0; i < NV_MAX; i++)
+        if (Y->v[i].on && Y->v[i].live)
+            return 1;
+    return 0;
 }
 
 static void syn_off(int l, int note)
@@ -357,8 +376,12 @@ static void syn_off(int l, int note)
     note = cap_note(note);
     for (i = 0; i < NV_MAX; i++)
         if (Y->v[i].on && Y->v[i].gate && Y->v[i].note == note && Y->v[i].left < 0) {
-            Y->v[i].gate = 0;
-            Y->v[i].st = 3;
+            if (Y->v[i].t < MIN_NOTE) {           /* a quick tap: let it sound for MIN_NOTE, then go */
+                Y->v[i].left = (int32_t)(MIN_NOTE - Y->v[i].t);
+            } else {
+                Y->v[i].gate = 0;
+                Y->v[i].st = 3;
+            }
         }
 }
 
@@ -396,6 +419,7 @@ static void arp_key(int l, int note, int on)
             Y->arp_i = 0;
             Y->arp_dir = 0;
         }
+        Y->arp_pend = (uint8_t)note;              /* (a tap gone before the arpeggiator speaks is still heard once) */
         for (i = 0; i < Y->held_n; i++)
             if (Y->held[i] == note)
                 return;
@@ -425,8 +449,13 @@ static void arp_run(int l, uint32_t n, float step_smp)
     int mode = L->p[PK_ARP] ? L->p[PK_ARP] : 1, octs = L->p[PK_AOCT] < 1 ? 1 : L->p[PK_AOCT] > 3 ? 3 : L->p[PK_AOCT];
     float per = step_smp * DIV[L->p[PK_ARATE] & 3u];
     int total, k, note;
-    if (!Y->held_n)
+    if (!Y->held_n) {
+        if (Y->arp_pend) {
+            syn_on_live(l, Y->arp_pend, 0.8f, (int32_t)(fm_maxf(per, (float)MIN_NOTE)));
+            Y->arp_pend = 0;
+        }
         return;
+    }
     if (L->p[PK_ARP] == 0)
         per = step_smp, octs = 2;                 /* Play's sparkle: sixteenths over two octaves */
     Y->arp_t -= (float)n;
@@ -446,8 +475,9 @@ static void arp_run(int l, uint32_t n, float step_smp)
     }
     Y->arp_i++;
     note = Y->held[k % Y->held_n] + 12 * (k / Y->held_n);
-    syn_on(l, note, 0.8f, (int32_t)(per * 0.6f));
+    syn_on_live(l, note, 0.8f, (int32_t)(per * 0.6f));
     Y->arp_note = (uint8_t)note;
+    Y->arp_pend = 0;
 }
 
 /* the live keys of a layer: through the arpeggiator if it runs */
@@ -457,8 +487,9 @@ static void syn_key(int l, int note, int on)
         arp_key(l, note, on);
         return;
     }
+    ly[l].arp_pend = 0;
     if (on)
-        syn_on(l, note, 0.85f, -1);
+        syn_on_live(l, note, 0.85f, -1);
     else
         syn_off(l, note);
 }

@@ -2,6 +2,13 @@
 
 Each release's notes come from its section here (`tools/release_notes.py`). The newest is first.
 
+## Unreleased
+
+- **Fixed:** the white keys were silent on a layer that was muted (Make's SEL mutes the layer you are on). The
+  child's own keys, and the preview of a step, now sound whatever the layer's mute; the song's own notes stay out.
+- **Fixed:** a quick tap on a white key could be lost. A key let go sooner than 30 ms now sounds for 30 ms (the
+  arpeggiator too).
+
 ## 0.1.0 — 2026-10-18
 
 The first release: a music and synthesis toy for children, on the M-VAVE FM-1.
